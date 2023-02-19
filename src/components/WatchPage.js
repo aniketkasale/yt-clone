@@ -16,7 +16,7 @@ const WatchPage = () => {
   return (
     <div className="md:flex md:flex-wrap md:justify-center md:w-full mt-4">
       <VideoPreview videoId={videoId} />
-      <div className="w-1/4 bg-gray-100 rounded-xl">live chat</div>
+      <div className="hidden md:block w-1/4 bg-gray-100 rounded-xl"></div>
     </div>
   );
 };
