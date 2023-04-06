@@ -1,17 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineMenu } from "react-icons/ai";
 import { BiUserCircle } from "react-icons/bi";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/navSlice";
 import SearchBar from "./SearchBar";
+import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import { cacheResults } from "../utils/searchSlice";
+import { Link } from "react-router-dom";
+
 const Header = () => {
   const dispatch = useDispatch();
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const searchCache = useSelector((store) => store.search);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchCache[searchQuery]) {
+        setSearchSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchSuggetions();
+      }
+    }, 200);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
+
+  const getSearchSuggetions = async () => {
+    fetch(YOUTUBE_SEARCH_API + searchQuery)
+      .then((res) => res.json())
+      .then((res) => {
+        setSearchSuggestions(res[1]);
+        if (searchQuery) dispatch(cacheResults({ [searchQuery]: res[1] }));
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div>
       {!showSearchBar && (
@@ -20,19 +51,21 @@ const Header = () => {
             <button onClick={() => toggleMenuHandler()}>
               <AiOutlineMenu className="hidden md:block mx-4 text-xl cursor-pointer" />
             </button>
-            {/* <Link to={"/"}> */}
-            <img
-              className="w-10 cursor-pointer"
-              src="https://www.freeiconspng.com/uploads/hd-youtube-logo-png-transparent-background-20.png"
-              alt="Youtube Logo"
-            />
-            <b className="cursor-pointer">MyYouTube</b>
-            {/* </Link> */}
+            <Link to={"/"} className="flex items-center">
+              <img
+                className="w-10 cursor-pointer"
+                src="https://www.freeiconspng.com/uploads/hd-youtube-logo-png-transparent-background-20.png"
+                alt="Youtube Logo"
+              />
+              <b className="cursor-pointer text-lg">MyYouTube</b>
+            </Link>
           </div>
           <div className="hidden md:block col-span-8">
             <SearchBar
               showSearchBar={showSearchBar}
               setShowSearchBar={setShowSearchBar}
+              setSearchQuery={setSearchQuery}
+              searchSuggestions={searchSuggestions}
             />
           </div>
           <div className="flex space-x-2 mr-2 md:mr-4 text-xl md:col-span-1">
@@ -50,6 +83,8 @@ const Header = () => {
         <SearchBar
           showSearchBar={showSearchBar}
           setShowSearchBar={setShowSearchBar}
+          setSearchQuery={setSearchQuery}
+          searchSuggestions={searchSuggestions}
         />
       )}
     </div>
