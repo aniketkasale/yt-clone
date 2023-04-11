@@ -28,7 +28,7 @@ const FilterBtnList = () => {
         </Link>
         <span className="border-r-gray-200 border-r-2 h-6"></span>
         {list.map((btn, i) => {
-          const style = "p-1 m-1 rounded-lg hidden md:block";
+          const style = "p-1 m-1 rounded-lg ";
           return (
             <Link key={i} to={"/?filter=" + btn}>
               <button
