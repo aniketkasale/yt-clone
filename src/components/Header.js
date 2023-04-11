@@ -8,6 +8,7 @@ import SearchBar from "./SearchBar";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
 import { Link } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -75,7 +76,7 @@ const Header = () => {
                 setShowSearchBar(!showSearchBar);
               }}
             />
-            <BiUserCircle className="md:text-4xl " />
+            <FaUserCircle className="md:text-4xl " />
           </div>
         </div>
       )}
