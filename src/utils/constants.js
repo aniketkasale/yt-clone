@@ -10,12 +10,18 @@ export const VIDEO_API =
   "&id=";
 
 export const YOUTUBE_SEARCH_API =
-  "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+  "https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&key=" +
+  GOOGLE_API_KEY +
+  "&q=";
 
 export const SEARCH_RESULT_API =
   "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&key=" +
   GOOGLE_API_KEY +
   "&q=";
+export const COMMENTS_API =
+  "https://www.googleapis.com/youtube/v3/commentThreads?textFormat=plainText&part=snippet&maxResults=50&key=" +
+  GOOGLE_API_KEY +
+  "&videoId=";
 
 export const kFormatter = (num) => {
   return Math.abs(num) > 999

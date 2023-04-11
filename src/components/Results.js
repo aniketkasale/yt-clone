@@ -20,19 +20,25 @@ const Results = () => {
     console.log(json.items);
   };
 
-  if (videos.length === 0) {
+  if (videos?.length === 0) {
     return <ResultShimmer />;
   }
 
   return (
     <div className="md:flex flex-col md:flex-wrap md:justify-center mx-auto w-fit">
-      {videos.map((video) => {
-        return (
-          <Link key={video.id} to={"/watch?v=" + video.id.videoId}>
-            <ResultVideoCard key={video.id} info={video} />
-          </Link>
-        );
-      })}
+      {videos ? (
+        videos.map((video) => {
+          return (
+            <Link key={video.id} to={"/watch?v=" + video.id.videoId}>
+              <ResultVideoCard key={video.id} info={video} />
+            </Link>
+          );
+        })
+      ) : (
+        <div className="mt-48 text-lg text-red-400 bg-gray-100 p-2 rounded-xl shadow-inner">
+          Oops! looks like we have exceeded youtube API quota
+        </div>
+      )}
     </div>
   );
 };

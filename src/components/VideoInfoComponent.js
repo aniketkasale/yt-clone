@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { useState } from "react";
-import { RxDotFilled } from "react-icons/rx";
 import { kFormatter } from "../utils/constants";
 
 const VideoInfoComponent = ({ info }) => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { VIDEO_API } from "../utils/constants";
 import VideoInfoComponent from "./VideoInfoComponent";
 import VideoPreviewShimmer from "./VideoPreviewShimmer";
+import Comments from "./Comments";
 
 const VideoPreview = ({ videoId }) => {
   const [video, setVideo] = useState([]);
@@ -31,6 +32,7 @@ const VideoPreview = ({ videoId }) => {
       <div>
         <VideoInfoComponent info={video} />
       </div>
+      <Comments videoId={videoId} />
     </div>
   );
 };

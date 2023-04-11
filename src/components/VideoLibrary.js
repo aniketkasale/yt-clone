@@ -1,34 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { YOUTUBE_API } from "../utils/constants";
+import { Link, useSearchParams } from "react-router-dom";
+import { SEARCH_RESULT_API, YOUTUBE_API } from "../utils/constants";
 import ShimmerUI from "./ShimmerUI";
 import VideoCard from "./VideoCard";
 
 const VideoLibrary = () => {
   const [videos, setVideos] = useState([]);
+  const [searchParams] = useSearchParams();
+  const filter = searchParams.get("filter");
   useEffect(() => {
     getVideos();
-  }, []);
+  }, [searchParams]);
 
   const getVideos = async () => {
-    const data = await fetch(YOUTUBE_API);
+    const data = await fetch(
+      filter === null ? YOUTUBE_API : SEARCH_RESULT_API + filter
+    );
     const json = await data.json();
     setVideos(json.items);
   };
-
-  if (videos.length === 0) {
+  console.log("videos", videos);
+  if (videos !== undefined && videos.length === 0) {
     return <ShimmerUI />;
   }
 
   return (
     <div className="md:flex md:flex-wrap md:justify-center">
-      {videos.map((video) => {
-        return (
-          <Link key={video.id} to={"/watch?v=" + video.id}>
-            <VideoCard key={video.id} info={video} />
-          </Link>
-        );
-      })}
+      {videos !== undefined ? (
+        videos.map((video) => {
+          const videoId = filter === null ? video.id : video.id.videoId;
+          return (
+            <Link key={videoId} to={"/watch?v=" + videoId}>
+              <VideoCard key={video.id} info={video} filter={filter} />
+            </Link>
+          );
+        })
+      ) : (
+        <div className="mt-48 text-lg text-red-400 bg-gray-100 p-2 rounded-xl shadow-inner">
+          Oops! looks like we have exceeded youtube API quota
+        </div>
+      )}
     </div>
   );
 };
