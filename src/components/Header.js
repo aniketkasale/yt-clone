@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import { AiOutlineMenu } from "react-icons/ai";
-import { BiUserCircle } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { AiOutlineSearch, AiOutlineMenu } from "react-icons/ai";
+import { FaUserCircle } from "react-icons/fa";
 import { toggleMenu } from "../utils/navSlice";
+import { cacheResults } from "../utils/searchSlice";
 import SearchBar from "./SearchBar";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
-import { cacheResults } from "../utils/searchSlice";
-import { Link } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
 
 const Header = () => {
   const dispatch = useDispatch();
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const searchCache = useSelector((store) => store.search);
+  const searchCacheResults = useSelector((store) => store.search);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchCache[searchQuery]) {
-        setSearchSuggestions(searchCache[searchQuery]);
+      if (searchCacheResults[searchQuery]) {
+        setSearchSuggestions(searchCacheResults[searchQuery]);
       } else {
-        getSearchSuggetions();
+        getSearchSuggestions();
       }
     }, 200);
     return () => {
@@ -34,7 +32,7 @@ const Header = () => {
     dispatch(toggleMenu());
   };
 
-  const getSearchSuggetions = async () => {
+  const getSearchSuggestions = async () => {
     fetch(YOUTUBE_SEARCH_API + searchQuery)
       .then((res) => res.json())
       .then((res) => {
@@ -45,11 +43,11 @@ const Header = () => {
   };
 
   return (
-    <div>
+    <>
       {!showSearchBar && (
         <div className="flex md:grid-flow-col md:grid justify-between items-center border-b-2 shadow-sm md:shadow-none md:border-none">
           <div className="flex items-center md:col-span-3">
-            <button onClick={() => toggleMenuHandler()}>
+            <button onClick={toggleMenuHandler}>
               <AiOutlineMenu className="hidden md:block mx-4 text-xl cursor-pointer" />
             </button>
             <Link to={"/"} className="flex items-center">
@@ -72,9 +70,7 @@ const Header = () => {
           <div className="flex space-x-2 mr-2 md:mr-4 text-xl md:col-span-1">
             <AiOutlineSearch
               className="md:hidden"
-              onClick={() => {
-                setShowSearchBar(!showSearchBar);
-              }}
+              onClick={() => setShowSearchBar(!showSearchBar)}
             />
             <FaUserCircle className="md:text-4xl " />
           </div>
@@ -88,7 +84,7 @@ const Header = () => {
           searchSuggestions={searchSuggestions}
         />
       )}
-    </div>
+    </>
   );
 };
 

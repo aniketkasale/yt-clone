@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import ChatMessageCard from "./ChatMessageCard";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "../utils/chatSlice";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
+
+import ChatMessageCard from "../components/ChatMessageCard";
+import { addMessage } from "../utils/chatSlice";
 import {
   generateRandomCompliment,
   generateRandomId,
@@ -13,43 +14,44 @@ import {
 const LiveChat = () => {
   const dispatch = useDispatch();
   const chatMessages = useSelector((store) => store.chat.messages);
-  const [userMessage, setUserMessage] = useState();
+  const [userMessage, setUserMessage] = useState("");
+
   useEffect(() => {
-    const i = setInterval(() => {
-      dispatch(
-        addMessage({
-          id: generateRandomId(5),
-          name: generateRandomName(),
-          message: generateRandomCompliment(),
-        })
-      );
+    const intervalId = setInterval(() => {
+      const newMessage = {
+        id: generateRandomId(5),
+        name: generateRandomName(),
+        message: generateRandomCompliment(),
+      };
+      dispatch(addMessage(newMessage));
     }, 2000);
 
-    return () => {
-      clearInterval(i);
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newMessage = {
+      id: generateRandomId(5),
+      name: "User name",
+      message: userMessage,
     };
-  }, []);
+    dispatch(addMessage(newMessage));
+    setUserMessage("");
+  };
+
+  const handleChange = (e) => {
+    setUserMessage(e.target.value);
+  };
 
   return (
     <div>
       <div className="box-border overflow-y-scroll flex flex-col-reverse h-96">
-        {chatMessages.map(({ name, message }, i) => {
-          return <ChatMessageCard key={i} name={name} message={message} />;
-        })}
+        {chatMessages.map((message, i) => (
+          <ChatMessageCard key={i} {...message} />
+        ))}
       </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          dispatch(
-            addMessage({
-              id: generateRandomId(5),
-              name: "Your name",
-              message: userMessage,
-            })
-          );
-          setUserMessage("");
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <div className="bg-white flex p-2 gap-2 rounded-xl items-center">
           <FaUserCircle className="md:text-4xl " />
 
@@ -57,9 +59,8 @@ const LiveChat = () => {
             className="outline-none border-b-2 w-full border-blue-200"
             placeholder="Say something..."
             value={userMessage}
-            onChange={(e) => {
-              setUserMessage(e.target.value);
-            }}
+            name="userMessage"
+            onChange={handleChange}
           />
           <button type="submit" className="bg-none border-none">
             <AiOutlineSend className="w-10 cursor-pointer" />

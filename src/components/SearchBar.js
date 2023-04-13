@@ -49,22 +49,20 @@ const SearchBar = ({
           <ul>
             {searchSuggestions.map((item, i) => {
               return (
-                <Link
+                <li
                   key={i}
-                  to={"results/?search_query=" + item}
                   onClick={() => {
                     setIsSearchBoxOpen(false);
                     setQuery(item);
                   }}
                 >
-                  <li
-                    key={i}
+                  <Link
                     className="flex px-5 py-1 gap-2 items-center hover:bg-gray-100"
-                    onClick={() => {}}
+                    to={`results/?search_query=${item}`}
                   >
                     <AiOutlineSearch /> {item}
-                  </li>
-                </Link>
+                  </Link>
+                </li>
               );
             })}
           </ul>

@@ -13,6 +13,7 @@ This project is a clone of the popular video-sharing platform YouTube, developed
 - **Optimized API Calls Using Debouncing:** The app uses debouncing to optimize API calls throughout the app. For example, when a user scrolls through the video list, the app waits until the user has stopped scrolling before fetching more videos. This feature reduces the number of API calls made and improves performance.
 - **Comments on YouTube:** The app includes a comments section that allows users to view and post comments on a video. The comments are fetched from the YouTube API and are displayed in a threaded view to enhance readability.
 - **Live Chat of YouTube - Get Data Live, Update UI Continuously Developed with API Polling:** The app includes a live chat feature that allows users to view and send messages in real-time. The chat is implemented using API polling, which means that the app regularly makes API calls to fetch new messages and updates the UI accordingly.
+- **React Memo for Optimization:** The app uses `React.memo()` to optimize the performance of certain components. `React.memo()` is a higher-order component that memoizes the result of a component's rendering, preventing unnecessary re-renders and improving performance.
 
 ## Usage
 

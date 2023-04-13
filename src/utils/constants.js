@@ -1,3 +1,4 @@
+// const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 const GOOGLE_API_KEY = "AIzaSyAIi8VgLmgWhKlLLLRkRAGWCco6Nj2nY_I";
 
 export const YOUTUBE_API =

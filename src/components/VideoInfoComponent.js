@@ -3,9 +3,19 @@ import React, { useState } from "react";
 import { kFormatter } from "../utils/constants";
 
 const VideoInfoComponent = ({ info }) => {
-  const [showDesc, setShowDesc] = useState(false);
-  const { snippet, statistics } = info;
-  const { channelTitle, title, description, publishedAt } = snippet;
+  const [showDescription, setShowDescription] = useState(false);
+  const {
+    snippet: { channelTitle, title, description, publishedAt },
+    statistics: { viewCount },
+  } = info;
+
+  const formattedViewCount = kFormatter(viewCount);
+  const formattedPublishedAt = moment(publishedAt).fromNow();
+  const truncatedDescription = showDescription
+    ? description
+    : `${description.substring(0, 200)}...`;
+  const toggleDescription = () => setShowDescription(!showDescription);
+  const buttonText = showDescription ? "less" : "more";
 
   return (
     <div className="md:mt-2 m-2">
@@ -20,23 +30,13 @@ const VideoInfoComponent = ({ info }) => {
       <div className="bg-gray-200 rounded-lg p-2 mt-2">
         <div className="flex flex-col">
           <p className="font-semibold text-sm md:text-base">
-            {kFormatter(statistics.viewCount)} views &nbsp;
-            {moment(publishedAt).fromNow()}
+            {formattedViewCount} views &nbsp; {formattedPublishedAt}
           </p>
           <p className="text-sm md:text-base">
-            {showDesc ? description : description.substring(0, 200) + "..."}
-            {showDesc ? (
-              <>
-                <br /> <br />
-              </>
-            ) : (
-              <></>
-            )}
-            <button
-              className="font-semibold"
-              onClick={() => setShowDesc(!showDesc)}
-            >
-              Show {showDesc ? "less" : "more"}
+            {truncatedDescription}
+            {showDescription && <br />}
+            <button className="font-semibold" onClick={toggleDescription}>
+              Show {buttonText}
             </button>
           </p>
         </div>
