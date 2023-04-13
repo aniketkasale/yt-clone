@@ -9,17 +9,25 @@ const VideoLibrary = () => {
   const [searchParams] = useSearchParams();
   const filter = searchParams.get("filter");
   useEffect(() => {
+    console.log("filter", filter);
+
     getVideos();
-  }, [searchParams]);
+  }, [searchParams, filter]);
 
   const getVideos = async () => {
     const data = await fetch(
       filter === null ? YOUTUBE_API : SEARCH_RESULT_API + filter
     );
     const json = await data.json();
-    setVideos(json.items);
+    const onlyVideos = json.items.filter((video) => {
+      if (filter === null) {
+        return video.kind === "youtube#video";
+      } else {
+        return video.id.kind === "youtube#video";
+      }
+    });
+    setVideos(onlyVideos);
   };
-  console.log("videos", videos);
   if (videos !== undefined && videos.length === 0) {
     return <ShimmerUI />;
   }
@@ -28,7 +36,7 @@ const VideoLibrary = () => {
     <div className="md:flex md:flex-wrap md:justify-center">
       {videos !== undefined ? (
         videos.map((video) => {
-          const videoId = filter === null ? video.id : video.id.videoId;
+          const videoId = filter === null || "" ? video.id : video.id.videoId;
           return (
             <Link key={videoId} to={"/watch?v=" + videoId}>
               <VideoCard key={video.id} info={video} filter={filter} />
