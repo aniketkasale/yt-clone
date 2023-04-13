@@ -9,8 +9,6 @@ const VideoLibrary = () => {
   const [searchParams] = useSearchParams();
   const filter = searchParams.get("filter");
   useEffect(() => {
-    console.log("filter", filter);
-
     getVideos();
   }, [searchParams, filter]);
 
