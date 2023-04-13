@@ -17,8 +17,12 @@ const Results = () => {
   const getVideos = async () => {
     const data = await fetch(SEARCH_RESULT_API + search_query);
     const json = await data.json();
+    console.log(json.items);
+    const onlyVideos = json.items.filter((video) => {
+      return video.id.kind === "youtube#video";
+    });
     setIsLoading(false);
-    setVideos(json.items);
+    setVideos(onlyVideos);
   };
 
   useEffect(() => {
