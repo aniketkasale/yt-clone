@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import { CiSearch } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useTriggerOutsideClick from "../utils/useTriggerOutsideClick";
 
 const SearchBar = ({
@@ -14,6 +14,7 @@ const SearchBar = ({
   const [isSearchBoxOpen, setIsSearchBoxOpen] = useState(false);
   const [query, setQuery] = useState("");
   const wrapperRef = useRef(null);
+  const navigate = useNavigate();
   useTriggerOutsideClick(wrapperRef, () => {
     setIsSearchBoxOpen(false);
   });
@@ -25,6 +26,11 @@ const SearchBar = ({
           onClick={() => setShowSearchBar(!showSearchBar)}
         />
         <input
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              navigate(`results/?search_query=${e.target.value}`);
+            }
+          }}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setIsSearchBoxOpen(true);
